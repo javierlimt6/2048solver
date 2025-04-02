@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Flex, Grid, GridItem, Text, VStack, HStack, Heading, Container, useBreakpointValue, Center } from '@chakra-ui/react';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api';
+const API_URL = '/api';
 
 interface GameState {
   matrix: number[][];
