@@ -59,17 +59,13 @@ async def next_move():
         # Move forward in the game history
         current_index += 1
     
-    # Get move direction by comparing current and previous matrices
-    move_dir = "Unknown"
-    if current_index > 0:
-        # We could determine the move by analyzing the difference between matrices
-        # But for simplicity, we'll just represent it as a step number
-        move_dir = f"Move {current_index}"
+    # Get move direction - check if the key exists in the dictionary
+    move_dir = game_moves[current_index].get("move", "Unknown")
     
     return {
         "matrix": game_moves[current_index]["mat"],
         "score": game_moves[current_index]["score"],
-        "move": move_dir,
+        "move": move_dir,  # Fixed: use the move from the current state
         "current_index": current_index,
         "states_count": len(game_moves),
         "game_over": current_game_over and current_index == len(game_moves) - 1
@@ -88,7 +84,8 @@ async def prev_move():
         current_index -= 1
     
     # Get move direction
-    move_dir = "Initial state" if current_index == 0 else f"Move {current_index}"
+    move_dir = "Initial state" if current_index == 0 else game_moves[current_index].get('move', 'Unknown')
+
     
     return {
         "matrix": game_moves[current_index]["mat"],

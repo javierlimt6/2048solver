@@ -36,11 +36,11 @@ class GameGrid(Frame):
                             'a': self.l['left'],
                             'd': self.l['right'] }
         self.grid_cells = []
-        self.init_grid()
-        self.init_score()
+        #self.init_grid()
+        #self.init_score()
         self.game_state = self.l['make_new_game'](GRID_LEN)
-        self.update_grid_cells()
-        self.mainloop()
+        #self.update_grid_cells()
+        #self.mainloop()
         
     def init_grid(self):
         background = Frame(self, bg=BACKGROUND_COLOR_GAME, width=SIZE, height=SIZE)
@@ -310,19 +310,27 @@ game_logic = {
 # AI Assessment #
 #################
 
+funct_to_move = {
+    'w' : 'UP',
+    'a': 'LEFT',
+    's': 'DOWN',
+    'd': 'RIGHT'
+}
+
 def get_AI_score(AI_funct, custom_mat = []):
     GRID_SIZE = 4
     MAX_FALSE_MOVES = 80
     false_moves_counter = MAX_FALSE_MOVES
     score = 0
-    move_history = [{"mat": custom_mat, "score" : 0}]
     mat = add_two(add_two(new_game_matrix(GRID_SIZE))) if not custom_mat else custom_mat
+    move_history = [{"mat": mat, "score" : 0, "move" : "None"}]
     while True:
         #print(mat)
+        move = AI_funct(mat)
         move_funct = {'w': merge_up,
                       'a': merge_left,
                       's': merge_down,
-                      'd': merge_right}[AI_funct(mat)]
+                      'd': merge_right}[move]
         mat, valid, score_increment = move_funct(mat)
         if not valid:
             MAX_FALSE_MOVES -= 1
@@ -334,7 +342,8 @@ def get_AI_score(AI_funct, custom_mat = []):
         mat = add_two(mat)
         status = game_status(mat)
         move_history.append({"mat": mat,
-                             "score": score})
+                             "score": score,
+                             "move" : funct_to_move[move]})
         if status == "win":
             return move_history, True
         elif status == "lose":
